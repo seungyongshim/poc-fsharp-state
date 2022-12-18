@@ -1,7 +1,15 @@
 namespace ConsoleApp1
 
-type State<'S, 'A> = | State of state : 'S * action : 'A
-type Random<'A> = State<int, 'A>
+open System
 
-module StateModule = 
-    
+type State<'S, 'A> = (struct ('S * 'A))
+type Random = State<double, double>
+
+module State = 
+    let random (seed : double) : Random = 
+        let nextSeed = (1839567234. * seed + 972348567.) % 8239451023.
+        (nextSeed, nextSeed)
+    let randomInRange (max: double) (min: double) : Random =
+        let inRange num =
+            min + Math.Floor((num / 8239451023.) * (max - min))
+        map inRange random
